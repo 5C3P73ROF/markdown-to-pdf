@@ -9,26 +9,10 @@
       line-height: 1.6;
       padding: 20px;
       margin: 0;
+      font-size: 18px;
     }
 
-    pre {
-      background: none;
-      border-radius: 0;
-      margin: 0.5em 0;
-      padding: 0;
-      color: inherit;
-      font-family: inherit;
-    }
-
-    code {
-      background: none;
-      padding: 0;
-      border-radius: 0;
-      color: inherit;
-      font-family: inherit;
-    }
-
-    :not(pre) > code {
+    pre, code, :not(pre) > code {
       background: none;
       padding: 0;
       border-radius: 0;
@@ -89,19 +73,33 @@
     }
 
     #output {
-      border-top: 1px solid #ccc;
       margin-top: 1em;
-      padding-top: 1em;
     }
 
-    .buttons {
+    .controls {
       margin-bottom: 1em;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #output, #output * {
+        visibility: visible;
+      }
+      #output {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Markdown to PDF</h1>
-  <textarea id="markdown" placeholder="Enter Markdown here..."># Hello World
+  <div id="interface">
+    <h1>Markdown to PDF</h1>
+    <textarea id="markdown" placeholder="Enter Markdown here..."># Hello World
 
 This is **bold** and this is *italic*.
 
@@ -115,12 +113,21 @@ This is **bold** and this is *italic*.
 function hello() {
   console.log("Hello, Markdown!");
 }
-\`\`\`
-</textarea>
+\`\`\`</textarea>
 
-  <div class="buttons">
-    <button onclick="convertMarkdown()">Convert</button>
-    <button onclick="window.print()">Print as PDF</button>
+    <div class="controls">
+      <label for="fontSize">Font size:</label>
+      <select id="fontSize" onchange="changeFontSize()">
+        <option value="14">14px</option>
+        <option value="16">16px</option>
+        <option value="18" selected>18px</option>
+        <option value="20">20px</option>
+        <option value="24">24px</option>
+      </select>
+
+      <button onclick="convertMarkdown()">Convert</button>
+      <button onclick="window.print()">Print as PDF</button>
+    </div>
   </div>
 
   <div id="output"></div>
@@ -131,7 +138,19 @@ function hello() {
       const input = document.getElementById('markdown').value;
       const html = marked.parse(input);
       document.getElementById('output').innerHTML = html;
+
+      // Hide interface, show only output
+      document.getElementById('interface').style.display = 'none';
+      document.getElementById('output').style.display = 'block';
     }
+
+    function changeFontSize() {
+      const size = document.getElementById('fontSize').value;
+      document.body.style.fontSize = size + 'px';
+    }
+
+    // Optional: Keep output hidden initially
+    document.getElementById('output').style.display = 'none';
   </script>
 </body>
 </html>
