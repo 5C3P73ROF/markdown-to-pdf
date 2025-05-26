@@ -81,6 +81,16 @@
     }
 
     @media print {
+      body, #output {
+        width: 210mm;
+        max-width: 210mm;
+        margin: 0 auto;
+        box-sizing: border-box;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        hyphens: auto;
+      }
+    
       body * {
         visibility: hidden;
       }
@@ -91,7 +101,6 @@
         position: absolute;
         top: 0;
         left: 0;
-        width: 100%;
       }
     }
   </style>
